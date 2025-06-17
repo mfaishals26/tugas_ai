@@ -27,46 +27,6 @@ st.markdown("""
     h1, h2, h3, h4, h5, h6 { color: #00ffc3; }
     </style>
 """, unsafe_allow_html=True)
-    # ========== ANIMASI EMOJI BERGERAK ========== #
-    st.markdown("""
-    <div class="emoji-rain">
-        <span>😊</span><span>😢</span><span>😠</span><span>🥰</span><span>😎</span><span>🤯</span><span>😭</span>
-    </div>
-    <style>
-    .emoji-rain {
-        position: relative;
-        height: 50px;
-        overflow: visible;
-    }
-    .emoji-rain span {
-        position: absolute;
-        animation: fall 5s linear infinite;
-        font-size: 2rem;
-        opacity: 0.8;
-    }
-    .emoji-rain span:nth-child(1) { left: 5%; animation-delay: 0s; }
-    .emoji-rain span:nth-child(2) { left: 20%; animation-delay: 0.5s; }
-    .emoji-rain span:nth-child(3) { left: 35%; animation-delay: 1s; }
-    .emoji-rain span:nth-child(4) { left: 50%; animation-delay: 1.5s; }
-    .emoji-rain span:nth-child(5) { left: 65%; animation-delay: 2s; }
-    .emoji-rain span:nth-child(6) { left: 80%; animation-delay: 2.5s; }
-    .emoji-rain span:nth-child(7) { left: 95%; animation-delay: 3s; }
-
-    @keyframes fall {
-        0% { top: -40px; opacity: 0; transform: rotate(0deg); }
-        30% { opacity: 1; }
-        100% { top: 100px; opacity: 0; transform: rotate(360deg); }
-    }
-    </style>
-    """, unsafe_allow_html=True)
-
-    contoh_kalimat = st.selectbox("📋 Pilih Contoh Kalimat", (
-        "", "Aku senang banget hari ini dapet kabar baik!",
-        "Gue marah banget ama dia!",
-        "Sedih banget rasanya ditinggal pas sayang-sayangnya.",
-        "Stress banget mau UTS tapi belum belajar.",
-        "Biasa aja sih, ngga terlalu penting."
-    ))
 
 # ========== LABEL EMOSI ========== #
 labels = {
@@ -141,7 +101,38 @@ if menu == "🏠 Beranda":
         - Visualisasi grafik pie chart
         - Ekspor hasil ke CSV
     """)
+  # ========== ANIMASI EMOJI BERGERAK ========== #
+    st.markdown("""
+    <div class="emoji-rain">
+        <span>😊</span><span>😢</span><span>😠</span><span>🥰</span><span>😎</span><span>🤯</span><span>😭</span>
+    </div>
+    <style>
+    .emoji-rain {
+        position: relative;
+        height: 50px;
+        overflow: visible;
+    }
+    .emoji-rain span {
+        position: absolute;
+        animation: fall 5s linear infinite;
+        font-size: 2rem;
+        opacity: 0.8;
+    }
+    .emoji-rain span:nth-child(1) { left: 5%; animation-delay: 0s; }
+    .emoji-rain span:nth-child(2) { left: 20%; animation-delay: 0.5s; }
+    .emoji-rain span:nth-child(3) { left: 35%; animation-delay: 1s; }
+    .emoji-rain span:nth-child(4) { left: 50%; animation-delay: 1.5s; }
+    .emoji-rain span:nth-child(5) { left: 65%; animation-delay: 2s; }
+    .emoji-rain span:nth-child(6) { left: 80%; animation-delay: 2.5s; }
+    .emoji-rain span:nth-child(7) { left: 95%; animation-delay: 3s; }
 
+    @keyframes fall {
+        0% { top: -40px; opacity: 0; transform: rotate(0deg); }
+        30% { opacity: 1; }
+        100% { top: 100px; opacity: 0; transform: rotate(360deg); }
+    }
+    </style>
+    """, unsafe_allow_html=True)
 # ========== DETEKSI EMOSI ========== #
 elif menu == "🧠 Deteksi Emosi":
     st.title("🔍 Deteksi Emosi dari Kalimat")
