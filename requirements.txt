@@ -1,5 +1,7 @@
-streamlit
-torch==2.1.0
-transformers
+streamlit>=1.25.0
+transformers>=4.37.2
+torch>=2.0.0
 pandas
+numpy
 plotly
+streamlit-extras
