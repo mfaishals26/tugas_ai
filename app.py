@@ -106,6 +106,39 @@ if menu == "🏠 Beranda":
 elif menu == "🧠 Deteksi Emosi":
     st.title("🔍 Deteksi Emosi dari Kalimat")
 
+    # ========== ANIMASI EMOJI BERGERAK ========== #
+    st.markdown("""
+    <div class="emoji-rain">
+        <span>😊</span><span>😢</span><span>😠</span><span>🥰</span><span>😎</span><span>🤯</span><span>😭</span>
+    </div>
+    <style>
+    .emoji-rain {
+        position: relative;
+        height: 50px;
+        overflow: visible;
+    }
+    .emoji-rain span {
+        position: absolute;
+        animation: fall 5s linear infinite;
+        font-size: 2rem;
+        opacity: 0.8;
+    }
+    .emoji-rain span:nth-child(1) { left: 5%; animation-delay: 0s; }
+    .emoji-rain span:nth-child(2) { left: 20%; animation-delay: 0.5s; }
+    .emoji-rain span:nth-child(3) { left: 35%; animation-delay: 1s; }
+    .emoji-rain span:nth-child(4) { left: 50%; animation-delay: 1.5s; }
+    .emoji-rain span:nth-child(5) { left: 65%; animation-delay: 2s; }
+    .emoji-rain span:nth-child(6) { left: 80%; animation-delay: 2.5s; }
+    .emoji-rain span:nth-child(7) { left: 95%; animation-delay: 3s; }
+
+    @keyframes fall {
+        0% { top: -40px; opacity: 0; transform: rotate(0deg); }
+        30% { opacity: 1; }
+        100% { top: 100px; opacity: 0; transform: rotate(360deg); }
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
     contoh_kalimat = st.selectbox("📋 Pilih Contoh Kalimat", (
         "", "Aku senang banget hari ini dapet kabar baik!",
         "Gue marah banget ama dia!",
@@ -117,7 +150,7 @@ elif menu == "🧠 Deteksi Emosi":
     if contoh_kalimat:
         st.session_state["isi_otomatis"] = contoh_kalimat
 
-    user_input = st.text_area("✍️ Masukkan Teks Kamu", value=st.session_state.get("Contoh:\nAku senang dapet nilai bagus!")
+    user_input = st.text_area("✍️ Masukkan Teks Kamu", value=st.session_state.get("isi_otomatis", ""))
 
     if st.button("🚀 Deteksi Sekarang"):
         if user_input.strip():
@@ -127,7 +160,6 @@ elif menu == "🧠 Deteksi Emosi":
 
             st.success(f"💡 Emosi Terdeteksi: **{label}**")
 
-            # Grafik Pie Chart
             fig = px.pie(
                 names=list(prob_dict.keys()),
                 values=list(prob_dict.values()),
@@ -136,14 +168,11 @@ elif menu == "🧠 Deteksi Emosi":
             )
             st.plotly_chart(fig, use_container_width=True)
 
-            # Kutipan Emosional
             st.markdown("#### 💬 Kutipan untuk Kamu:")
             st.info(get_emotion_message(label))
 
-            # 🔗 Ajakan Share
             st.markdown("---")
             st.subheader("🔗 Bagikan Hasil Deteksimu!")
-
             st.markdown("""
             Ingin temanmu tahu bagaimana suasana hatimu hari ini? Salin teks di bawah dan bagikan ke media sosialmu! 🎉
             """)
@@ -156,7 +185,6 @@ Coba juga deteksi emosi kamu di sini 👉 https://faishal26-emotion-app.streamli
             st.code(share_text, language="markdown")
             st.caption("Salin dan bagikan ke WhatsApp, Instagram Story, atau Twitter 🚀")
 
-            # Tombol Unduh
             with st.expander("📥 Simpan Hasil"):
                 hasil_df = pd.DataFrame({
                     "Teks": [user_input],
