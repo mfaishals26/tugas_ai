@@ -1,4 +1,4 @@
-import streamlit as stMore actions
+import streamlit as st
 from transformers import BertTokenizer, BertForSequenceClassification
 import torch
 import numpy as np
@@ -37,34 +37,37 @@ labels = {
     4: "Stress",
 }
 
-# ========== QUOTES PER EMOSI ========== #
+# ========== KUTIPAN BERDASARKAN EMOSI ========== #
 quotes = {
     "Bersyukur": [
-        "Rasa syukur membuat hari-hari kita lebih bermakna.",
-        "Dengan bersyukur, hidup menjadi lebih indah."
+        "Rasa syukur mengubah apa yang kita miliki menjadi cukup. 🌼",
+        "Bahagia itu sederhana, yaitu bersyukur. 🤲"
     ],
     "Marah": [
-        "Tenang... menarik napas dalam bisa bantu meredakan amarah.",
-        "Marah itu manusiawi, tapi jangan biarkan ia menguasai kamu."
+        "Marah hanya akan membakar hatimu sendiri. Tenangkan pikiranmu. 🔥🧊",
+        "Tahan amarah, karena kamu lebih kuat dari emosimu. 💪"
     ],
     "Sedih": [
-        "Tidak apa-apa merasa sedih, kamu manusia yang punya hati.",
-        "Kadang menangis justru tanda kamu kuat bertahan."
+        "Kesedihan adalah bagian dari proses menjadi kuat. 💧",
+        "Tidak apa-apa merasa sedih, itu tanda kamu manusia. 🤍"
     ],
     "Senang": [
-        "Senang itu menular, sebarkan kebahagiaanmu!",
-        "Nikmati setiap momen bahagia, karena kamu layak mendapatkannya."
+        "Nikmati setiap momen bahagia. Kamu pantas mendapatkannya! 😄",
+        "Kebahagiaan itu menular, bagikanlah! ✨"
     ],
     "Stress": [
-        "Luangkan waktu sejenak untuk dirimu sendiri, kamu butuh istirahat.",
-        "Jangan terlalu keras pada dirimu. Pelan-pelan, semua bisa diatasi."
-    ],
+        "Tarik napas, kamu sudah melakukan yang terbaik. 🌿",
+        "Luangkan waktu untuk dirimu sendiri. 💆‍♂️"
+    ]
 }
+
+def get_emotion_message(label):
+    return random.choice(quotes.get(label, ["Tetap semangat!"]))
 
 # ========== LOAD MODEL ========== #
 @st.cache_resource
 def load_model():
-    repo = "faishal26/final_model"  # Ganti sesuai model di Hugging Face
+    repo = "faishal26/final_model"
     model = BertForSequenceClassification.from_pretrained(repo)
     tokenizer = BertTokenizer.from_pretrained(repo)
     return model, tokenizer
@@ -83,10 +86,7 @@ def predict_emotion(text):
 
 # ========== SIDEBAR ========== #
 st.sidebar.title("🧭 Navigasi")
-menu = st.sidebar.radio("Pilih Halaman", [
-    "🏠 Beranda", "🧠 Deteksi Emosi", "📑 Deteksi Massal", 
-    "💬 Form Konsultasi", "ℹ️ Tentang"
-])
+menu = st.sidebar.radio("Pilih Halaman", ["🏠 Beranda", "🧠 Deteksi Emosi", "📑 Deteksi Massal", "ℹ️ Tentang"])
 st.sidebar.markdown("---")
 st.sidebar.info("✨ Powered by IndoBERT\n👨‍💻 Kelompok 1")
 
@@ -100,7 +100,6 @@ if menu == "🏠 Beranda":
         - Deteksi emosi satu kalimat atau banyak
         - Visualisasi grafik pie chart
         - Ekspor hasil ke CSV
-        - Live chat konsultasi
     """)
 
 # ========== DETEKSI EMOSI ========== #
@@ -125,11 +124,10 @@ elif menu == "🧠 Deteksi Emosi":
             with st.spinner("🔍 Mendeteksi emosi... ✨😊😢😠😄"):
                 label, probas = predict_emotion(user_input)
             prob_dict = {labels[i]: float(probas[i]) for i in range(len(labels))}
+
             st.success(f"💡 Emosi Terdeteksi: **{label}**")
 
-            # Kutipan berdasarkan emosi
-            st.info(f"💬 *{random.choice(quotes[label])}*")
-
+            # Grafik Pie Chart
             fig = px.pie(
                 names=list(prob_dict.keys()),
                 values=list(prob_dict.values()),
@@ -138,6 +136,27 @@ elif menu == "🧠 Deteksi Emosi":
             )
             st.plotly_chart(fig, use_container_width=True)
 
+            # Kutipan Emosional
+            st.markdown("#### 💬 Kutipan untuk Kamu:")
+            st.info(get_emotion_message(label))
+
+            # 🔗 Ajakan Share
+            st.markdown("---")
+            st.subheader("🔗 Bagikan Hasil Deteksimu!")
+
+            st.markdown("""
+            Ingin temanmu tahu bagaimana suasana hatimu hari ini? Salin teks di bawah dan bagikan ke media sosialmu! 🎉
+            """)
+
+            share_text = f"""💬 *Saya baru saja mendeteksi emosi saya lewat AI IndoBERT!*
+Teks: "{user_input}"
+Emosi: **{label}**
+
+Coba juga deteksi emosi kamu di sini 👉 https://faishal26-emotion-app.streamlit.app"""
+            st.code(share_text, language="markdown")
+            st.caption("Salin dan bagikan ke WhatsApp, Instagram Story, atau Twitter 🚀")
+
+            # Tombol Unduh
             with st.expander("📥 Simpan Hasil"):
                 hasil_df = pd.DataFrame({
                     "Teks": [user_input],
@@ -165,34 +184,6 @@ elif menu == "📑 Deteksi Massal":
             st.download_button("💾 Unduh Hasil", data=df_massal.to_csv(index=False), file_name="hasil_massal.csv", mime="text/csv")
         else:
             st.warning("Masukkan setidaknya satu kalimat.")
-
-# ========== FORM KONSULTASI ========== #
-elif menu == "💬 Form Konsultasi":
-    st.title("💬 Konsultasi Emosi dengan Admin")
-
-    st.markdown("""
-        Jika kamu ingin berbicara atau berkonsultasi lebih lanjut mengenai perasaanmu, 
-        silakan gunakan live chat di pojok kanan bawah layar.
-
-        🧠 Jangan ragu, admin kami siap mendengarkan kamu secara privat dan hangat.
-    """)
-
-    # Tawk.to Script (ganti URL sesuai akun kamu)
-    st.markdown("""
-        <!-- Start of Tawk.to Script -->
-        <script type="text/javascript">
-        var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-        (function(){
-        var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-        s1.async=true;
-        s1.src='https://embed.tawk.to/6850d8536134f7190de07c61/1ittsq232';
-        s1.charset='UTF-8';
-        s1.setAttribute('crossorigin','*');
-        s0.parentNode.insertBefore(s1,s0);
-        })();
-        </script>
-        <!-- End of Tawk.to Script -->
-    """, unsafe_allow_html=True)
 
 # ========== TENTANG ========== #
 elif menu == "ℹ️ Tentang":
