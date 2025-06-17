@@ -276,7 +276,17 @@ elif menu == "📑 Deteksi Massal":
     </style>
     """, unsafe_allow_html=True)
 # ========== TENTANG ========== #
-  # ========== ANIMASI EMOJI BERGERAK ========== #
+elif menu == "ℹ️ Tentang":
+    st.title("ℹ️ Tentang Aplikasi Ini")
+    st.markdown("""
+    Aplikasi deteksi emosi ini dibuat dengan:
+
+    - 🤗 Transformers (IndoBERT)
+    - 🔥 PyTorch
+    - 🖥️ Streamlit modern style
+
+    Dibuat untuk tugas akhir kuliah **Kecerdasan Buatan**.
+ # ========== ANIMASI EMOJI BERGERAK ========== #
     st.markdown("""
     <div class="emoji-rain">
         <span>😊</span><span>😢</span><span>😠</span><span>🥰</span><span>😎</span><span>🤯</span><span>😭</span>
@@ -308,17 +318,6 @@ elif menu == "📑 Deteksi Massal":
     }
     </style>
     """, unsafe_allow_html=True)
-elif menu == "ℹ️ Tentang":
-    st.title("ℹ️ Tentang Aplikasi Ini")
-    st.markdown("""
-    Aplikasi deteksi emosi ini dibuat dengan:
-
-    - 🤗 Transformers (IndoBERT)
-    - 🔥 PyTorch
-    - 🖥️ Streamlit modern style
-
-    Dibuat untuk tugas akhir kuliah **Kecerdasan Buatan**.
-
     👨‍💻 Developer: **Kelompok 1**
     """)
     st.caption("© 2025 | Sistem Deteksi Emosi Bahasa Indonesia")
