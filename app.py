@@ -228,17 +228,17 @@ elif menu == "📑 Deteksi Massal":
             st.warning("Masukkan setidaknya satu kalimat.")
 
 # ========== KONSULTASI LIVE (BARU) ========== #
-# ========== KONSULTASI LIVE (BARU) ========== #
 elif menu == "💬 Konsultasi Live":
     st.title("💬 Form Konsultasi Live")
-    st.markdown("Butuh teman bicara atau saran lebih lanjut? Klik tombol di bawah untuk memulai percakapan langsung dengan tim kami.")
+    st.markdown("Butuh teman bicara atau saran lebih lanjut? Gunakan form di bawah ini untuk memulai percakapan langsung dengan tim kami.")
 
     # Link ke Tawk.to chat
     tawk_link = "https://tawk.to/chat/6850d8536134f7190de07c61/1ittsq232"  # Ganti dengan link Anda
 
-    if st.button("💬 Mulai Chat Sekarang"):
-        js = f"window.open('{tawk_link}', '_blank')"
-        st.markdown(f"<script>{js}</script>", unsafe_allow_html=True)
+    # Menyematkan iframe untuk Tawk.to chat
+    st.markdown(f"""
+    <iframe src="{tawk_link}" width="100%" height="600" frameborder="0"></iframe>
+    """, unsafe_allow_html=True)
 
     st.markdown("---")
     st.subheader("❓ Pertanyaan Umum (FAQ)")
