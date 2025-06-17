@@ -60,19 +60,27 @@ labels = {
 def load_model():
     model_dir = "final_model"
     zip_file = "final_model.zip"
-    file_id = "1htLjHXU3kQchKbvqMumQ9iW95EjDY2M0"  # GANTI dengan ID ZIP kamu
-    url = f"https://drive.google.com/file/d/1htLjHXU3kQchKbvqMumQ9iW95EjDY2M0/view?usp=sharing{file_id}"
+    gdrive_file_id = "11mUFfk9BPM32EskbVYRUDiELUTrQxcHqY"  # Ganti dengan ID kamu
 
-    if not os.path.exists("final_model"):
-        with st.spinner("📦 Mengunduh dan mengekstrak model..."):
-            gdown.download(url, zip_file, quiet=False)
+    # Download dan ekstrak jika belum ada
+    if not os.path.exists(model_dir):
+        gdrive_url = f"https://drive.google.com/file/d/1mUFfk9BPM32EskbVYRUDiELUTrQxcHqY"
+        with st.spinner("📥 Mengunduh model dari Google Drive..."):
+            gdown.download(gdrive_url, zip_file, quiet=False)
+
+        # Pastikan ZIP valid
+        try:
             with zipfile.ZipFile(zip_file, 'r') as zip_ref:
-                zip_ref.extractall()
-            os.remove(zip_file)
+                zip_ref.extractall(model_dir)
+        except zipfile.BadZipFile:
+            st.error("❌ File ZIP rusak atau bukan file ZIP valid. Pastikan link Google Drive benar dan file adalah ZIP.")
+            raise
+        os.remove(zip_file)
 
-    model = BertForSequenceClassification.from_pretrained("final_model")
-    tokenizer = BertTokenizer.from_pretrained("final_model")
+    model = BertForSequenceClassification.from_pretrained(model_dir)
+    tokenizer = BertTokenizer.from_pretrained(model_dir)
     return model, tokenizer
+
 
 model, tokenizer = load_model()
 model.eval()
