@@ -228,33 +228,18 @@ elif menu == "📑 Deteksi Massal":
             st.warning("Masukkan setidaknya satu kalimat.")
 
 # ========== KONSULTASI LIVE (BARU) ========== #
+# ========== KONSULTASI LIVE (BARU) ========== #
 elif menu == "💬 Konsultasi Live":
     st.title("💬 Form Konsultasi Live")
-    st.markdown("Butuh teman bicara atau saran lebih lanjut? Gunakan jendela chat di pojok kanan bawah untuk memulai percakapan langsung dengan tim kami.")
-    st.warning("⚠️ **Penting**: Widget chat hanya akan muncul jika pemilik aplikasi telah memasukkan ID Tawk.to yang valid di dalam kode.")
+    st.markdown("Butuh teman bicara atau saran lebih lanjut? Klik tombol di bawah untuk memulai percakapan langsung dengan tim kami.")
 
-    # --- SCRIPT TAWK.TO ---
-    # Ganti 'YOUR_PROPERTY_ID' dan 'YOUR_WIDGET_ID' dengan ID dari akun Tawk.to Anda.
-    property_id = "6850d8536134f7190de07c61" 
-    widget_id = "1ittsq232"
-    
-    # Hanya jalankan script jika ID sudah diisi
-    if property_id != "6850d8536134f7190de07c61" and widget_id != "1ittsq232":
-        tawk_script = f"""
-        <script type="text/javascript">
-        var Tawk_API=Tawk_API||{{}}, Tawk_LoadStart=new Date();
-        (function(){{
-        var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-        s1.async=true;
-        s1.src='https://embed.tawk.to/6850d8536134f7190de07c61/1ittsq232';
-        s1.charset='UTF-8';
-        s1.setAttribute('crossorigin','*');
-        s0.parentNode.insertBefore(s1,s0);
-        }})();
-        </script>
-        """
-        st.markdown(tawk_script, unsafe_allow_html=True)
-    
+    # Link ke Tawk.to chat
+    tawk_link = "https://tawk.to/chat/6850d8536134f7190de07c61/1ittsq232"  # Ganti dengan link Anda
+
+    if st.button("💬 Mulai Chat Sekarang"):
+        js = f"window.open('{tawk_link}', '_blank')"
+        st.markdown(f"<script>{js}</script>", unsafe_allow_html=True)
+
     st.markdown("---")
     st.subheader("❓ Pertanyaan Umum (FAQ)")
     st.markdown("""
