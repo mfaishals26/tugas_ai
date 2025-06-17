@@ -71,7 +71,7 @@ quotes = {
 def chat_with_bot(user_message):
     API_URL = "https://api-inference.huggingface.co/models/facebook/blenderbot-3B"
     headers = {
-        "Authorization": "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"  
+        "Authorization": "Bearer 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"  
     }
     payload = {"inputs": {"text": user_message}}
     response = requests.post(API_URL, headers=headers, json=payload)
