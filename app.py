@@ -4,7 +4,8 @@ import torch
 import numpy as np
 import pandas as pd
 import plotly.express as px
-import random
+import requests
+import random 
 
 # ========== CONFIG ========== #
 st.set_page_config(page_title="Deteksi Emosi AI", page_icon="💬", layout="wide")
@@ -37,33 +38,6 @@ labels = {
     4: "Stress",
 }
 
-# ========== KUTIPAN BERDASARKAN EMOSI ========== #
-quotes = {
-    "Bersyukur": [
-        "Rasa syukur mengubah apa yang kita miliki menjadi cukup. 🌼",
-        "Bahagia itu sederhana, yaitu bersyukur. 🤲"
-    ],
-    "Marah": [
-        "Marah hanya akan membakar hatimu sendiri. Tenangkan pikiranmu. 🔥🧊",
-        "Tahan amarah, karena kamu lebih kuat dari emosimu. 💪"
-    ],
-    "Sedih": [
-        "Kesedihan adalah bagian dari proses menjadi kuat. 💧",
-        "Tidak apa-apa merasa sedih, itu tanda kamu manusia. 🤍"
-    ],
-    "Senang": [
-        "Nikmati setiap momen bahagia. Kamu pantas mendapatkannya! 😄",
-        "Kebahagiaan itu menular, bagikanlah! ✨"
-    ],
-    "Stress": [
-        "Tarik napas, kamu sudah melakukan yang terbaik. 🌿",
-        "Luangkan waktu untuk dirimu sendiri. 💆‍♂️"
-    ]
-}
-
-def get_emotion_message(label):
-    return random.choice(quotes.get(label, ["Tetap semangat!"]))
-
 # ========== LOAD MODEL ========== #
 @st.cache_resource
 def load_model():
@@ -84,9 +58,31 @@ def predict_emotion(text):
     predicted_label = labels[np.argmax(probs)]
     return predicted_label, probs
 
+# ========== QUOTES ========== #
+quotes = {
+    "Bersyukur": "Selalu bersyukur adalah kunci kebahagiaan yang sesungguhnya 🌟",
+    "Marah": "Tarik napas dalam, dan coba lihat sisi baik dari situasi ini 🌬️",
+    "Sedih": "Tidak apa-apa untuk merasa sedih. Kamu tidak sendiri 🤗",
+    "Senang": "Nikmati setiap momen bahagia ini, kamu pantas mendapatkannya 😄",
+    "Stress": "Ambil jeda, istirahatkan pikiranmu sejenak. Kamu akan baik-baik saja ☕"
+}
+
+# ========== CHATBOT (LIVE CURHAT) ========== #
+def chat_with_bot(user_message):
+    API_URL = "https://api-inference.huggingface.co/models/facebook/blenderbot-3B"
+    headers = {
+        "Authorization": "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"  
+    }
+    payload = {"inputs": {"text": user_message}}
+    response = requests.post(API_URL, headers=headers, json=payload)
+    if response.status_code == 200:
+        return response.json()[0]["generated_text"]
+    else:
+        return "Maaf, chatbot sedang tidak tersedia. Coba lagi nanti ya."
+
 # ========== SIDEBAR ========== #
 st.sidebar.title("🧭 Navigasi")
-menu = st.sidebar.radio("Pilih Halaman", ["🏠 Beranda", "🧠 Deteksi Emosi", "📑 Deteksi Massal", "ℹ️ Tentang"])
+menu = st.sidebar.radio("Pilih Halaman", ["🏠 Beranda", "🧠 Deteksi Emosi", "📑 Deteksi Massal", "💬 Konsultasi Virtual", "ℹ️ Tentang"])
 st.sidebar.markdown("---")
 st.sidebar.info("✨ Powered by IndoBERT\n👨‍💻 Kelompok 1")
 
@@ -99,6 +95,7 @@ if menu == "🏠 Beranda":
         ### 🎯 Fitur:
         - Deteksi emosi satu kalimat atau banyak
         - Visualisasi grafik pie chart
+        - Konsultasi virtual dengan chatbot
         - Ekspor hasil ke CSV
     """)
 
@@ -117,17 +114,17 @@ elif menu == "🧠 Deteksi Emosi":
     if contoh_kalimat:
         st.session_state["isi_otomatis"] = contoh_kalimat
 
-    user_input = st.text_area("✍️ Masukkan Teks Kamu", value=st.session_state.get("isi_otomatis") , placeholder="Contoh:\nAku senang dapet nilai bagus!")
+    user_input = st.text_area("✍️ Masukkan Teks Kamu", value=st.session_state.get("isi_otomatis", ""), placeholder="Contoh:\nAku senang dapet nilai bagus!")
 
     if st.button("🚀 Deteksi Sekarang"):
         if user_input.strip():
             with st.spinner("🔍 Mendeteksi emosi... ✨😊😢😠😄"):
                 label, probas = predict_emotion(user_input)
-            prob_dict = {labels[i]: float(probas[i]) for i in range(len(labels))}
 
+            prob_dict = {labels[i]: float(probas[i]) for i in range(len(labels))}
             st.success(f"💡 Emosi Terdeteksi: **{label}**")
 
-            # Grafik Pie Chart
+            # Pie chart
             fig = px.pie(
                 names=list(prob_dict.keys()),
                 values=list(prob_dict.values()),
@@ -136,27 +133,10 @@ elif menu == "🧠 Deteksi Emosi":
             )
             st.plotly_chart(fig, use_container_width=True)
 
-            # Kutipan Emosional
-            st.markdown("#### 💬 Kutipan untuk Kamu:")
-            st.info(get_emotion_message(label))
+            # Quotes berdasarkan emosi
+            st.info(f"📌 **Kutipan:** _{quotes[label]}_")
 
-            # 🔗 Ajakan Share
-            st.markdown("---")
-            st.subheader("🔗 Bagikan Hasil Deteksimu!")
-
-            st.markdown("""
-            Ingin temanmu tahu bagaimana suasana hatimu hari ini? Salin teks di bawah dan bagikan ke media sosialmu! 🎉
-            """)
-
-            share_text = f"""💬 *Saya baru saja mendeteksi emosi saya lewat AI IndoBERT!*
-Teks: "{user_input}"
-Emosi: **{label}**
-
-Coba juga deteksi emosi kamu di sini 👉 https://sistemdeteksiemosidalamteksberbahasaindonesia.streamlit.app/"""
-            st.code(share_text, language="markdown")
-            st.caption("Salin dan bagikan ke WhatsApp, Instagram Story, atau Twitter 🚀")
-
-            # Tombol Unduh
+            # Ekspor hasil
             with st.expander("📥 Simpan Hasil"):
                 hasil_df = pd.DataFrame({
                     "Teks": [user_input],
@@ -184,6 +164,22 @@ elif menu == "📑 Deteksi Massal":
             st.download_button("💾 Unduh Hasil", data=df_massal.to_csv(index=False), file_name="hasil_massal.csv", mime="text/csv")
         else:
             st.warning("Masukkan setidaknya satu kalimat.")
+
+# ========== KONSULTASI VIRTUAL ========== #
+elif menu == "💬 Konsultasi Virtual":
+    st.title("💬 Konsultasi Virtual dengan Bot Emosi")
+    st.markdown("Tulis apapun yang kamu rasakan, biarkan AI menjadi teman curhatmu 🤗")
+
+    user_message = st.text_input("🗣️ Ceritakan Sesuatu", placeholder="Aku lagi sedih karena...")
+
+    if st.button("💬 Kirim"):
+        if user_message.strip():
+            with st.spinner("Bot sedang menanggapi..."):
+                response = chat_with_bot(user_message)
+            st.success("🧠 Balasan dari Bot:")
+            st.write(f"> {response}")
+        else:
+            st.warning("Tulis sesuatu dulu ya.")
 
 # ========== TENTANG ========== #
 elif menu == "ℹ️ Tentang":
