@@ -185,7 +185,7 @@ elif menu == "🧠 Deteksi Emosi":
 Teks: "{user_input}"
 Emosi: **{label}**
 
-Coba juga deteksi emosi kamu di sini 👉 https://faishal26-emotion-app.streamlit.app"""
+Coba juga deteksi emosi kamu di sini 👉 https://sistemdeteksiemosidalamteksberbahasaindonesia.streamlit.app"""
             st.code(share_text, language="markdown")
             st.caption("Salin dan bagikan ke WhatsApp, Instagram Story, atau Twitter 🚀")
 
