@@ -117,7 +117,7 @@ elif menu == "🧠 Deteksi Emosi":
     if contoh_kalimat:
         st.session_state["isi_otomatis"] = contoh_kalimat
 
-    user_input = st.text_area("✍️ Masukkan Teks Kamu", value=st.session_state.get("isi_otomatis", placeholder="Contoh:\nAku senang dapet nilai bagus!")
+    user_input = st.text_area("✍️ Masukkan Teks Kamu", value=st.session_state.get("isi_otomatis") , placeholder="Contoh:\nAku senang dapet nilai bagus!")
 
     if st.button("🚀 Deteksi Sekarang"):
         if user_input.strip():
