@@ -86,9 +86,43 @@ def predict_emotion(text):
 
 # ========== SIDEBAR ========== #
 st.sidebar.title("🧭 Navigasi")
-menu = st.sidebar.radio("Pilih Halaman", ["🏠 Beranda", "🧠 Deteksi Emosi", "📑 Deteksi Massal", "ℹ️ Tentang"])
+menu = st.sidebar.radio("Pilih Halaman", ["🏠 Beranda", "🧠 Deteksi Emosi", "📑 Deteksi Massal", "💬 Konsultasi Live", "ℹ️ Tentang"])
 st.sidebar.markdown("---")
 st.sidebar.info("✨ Powered by IndoBERT\n👨‍💻 Kelompok 1")
+
+# ========== ANIMASI EMOJI ========== #
+def emoji_rain_animation():
+    st.markdown("""
+    <div class="emoji-rain">
+        <span>😊</span><span>😢</span><span>😠</span><span>🥰</span><span>😎</span><span>🤯</span><span>😭</span>
+    </div>
+    <style>
+    .emoji-rain {
+        position: relative;
+        height: 50px;
+        overflow: visible;
+    }
+    .emoji-rain span {
+        position: absolute;
+        animation: fall 5s linear infinite;
+        font-size: 2rem;
+        opacity: 0.8;
+    }
+    .emoji-rain span:nth-child(1) { left: 5%; animation-delay: 0s; }
+    .emoji-rain span:nth-child(2) { left: 20%; animation-delay: 0.5s; }
+    .emoji-rain span:nth-child(3) { left: 35%; animation-delay: 1s; }
+    .emoji-rain span:nth-child(4) { left: 50%; animation-delay: 1.5s; }
+    .emoji-rain span:nth-child(5) { left: 65%; animation-delay: 2s; }
+    .emoji-rain span:nth-child(6) { left: 80%; animation-delay: 2.5s; }
+    .emoji-rain span:nth-child(7) { left: 95%; animation-delay: 3s; }
+
+    @keyframes fall {
+        0% { top: -40px; opacity: 0; transform: rotate(0deg); }
+        30% { opacity: 1; }
+        100% { top: 100px; opacity: 0; transform: rotate(360deg); }
+    }
+    </style>
+    """, unsafe_allow_html=True)
 
 # ========== BERANDA ========== #
 if menu == "🏠 Beranda":
@@ -100,75 +134,14 @@ if menu == "🏠 Beranda":
         - Deteksi emosi satu kalimat atau banyak
         - Visualisasi grafik pie chart
         - Ekspor hasil ke CSV
+        - Konsultasi Live dengan tim
     """)
-  # ========== ANIMASI EMOJI BERGERAK ========== #
-    st.markdown("""
-    <div class="emoji-rain">
-        <span>😊</span><span>😢</span><span>😠</span><span>🥰</span><span>😎</span><span>🤯</span><span>😭</span>
-    </div>
-    <style>
-    .emoji-rain {
-        position: relative;
-        height: 50px;
-        overflow: visible;
-    }
-    .emoji-rain span {
-        position: absolute;
-        animation: fall 5s linear infinite;
-        font-size: 2rem;
-        opacity: 0.8;
-    }
-    .emoji-rain span:nth-child(1) { left: 5%; animation-delay: 0s; }
-    .emoji-rain span:nth-child(2) { left: 20%; animation-delay: 0.5s; }
-    .emoji-rain span:nth-child(3) { left: 35%; animation-delay: 1s; }
-    .emoji-rain span:nth-child(4) { left: 50%; animation-delay: 1.5s; }
-    .emoji-rain span:nth-child(5) { left: 65%; animation-delay: 2s; }
-    .emoji-rain span:nth-child(6) { left: 80%; animation-delay: 2.5s; }
-    .emoji-rain span:nth-child(7) { left: 95%; animation-delay: 3s; }
+    emoji_rain_animation()
 
-    @keyframes fall {
-        0% { top: -40px; opacity: 0; transform: rotate(0deg); }
-        30% { opacity: 1; }
-        100% { top: 100px; opacity: 0; transform: rotate(360deg); }
-    }
-    </style>
-    """, unsafe_allow_html=True)
 # ========== DETEKSI EMOSI ========== #
 elif menu == "🧠 Deteksi Emosi":
     st.title("🔍 Deteksi Emosi dari Kalimat")
-
-    # ========== ANIMASI EMOJI BERGERAK ========== #
-    st.markdown("""
-    <div class="emoji-rain">
-        <span>😊</span><span>😢</span><span>😠</span><span>🥰</span><span>😎</span><span>🤯</span><span>😭</span>
-    </div>
-    <style>
-    .emoji-rain {
-        position: relative;
-        height: 50px;
-        overflow: visible;
-    }
-    .emoji-rain span {
-        position: absolute;
-        animation: fall 5s linear infinite;
-        font-size: 2rem;
-        opacity: 0.8;
-    }
-    .emoji-rain span:nth-child(1) { left: 5%; animation-delay: 0s; }
-    .emoji-rain span:nth-child(2) { left: 20%; animation-delay: 0.5s; }
-    .emoji-rain span:nth-child(3) { left: 35%; animation-delay: 1s; }
-    .emoji-rain span:nth-child(4) { left: 50%; animation-delay: 1.5s; }
-    .emoji-rain span:nth-child(5) { left: 65%; animation-delay: 2s; }
-    .emoji-rain span:nth-child(6) { left: 80%; animation-delay: 2.5s; }
-    .emoji-rain span:nth-child(7) { left: 95%; animation-delay: 3s; }
-
-    @keyframes fall {
-        0% { top: -40px; opacity: 0; transform: rotate(0deg); }
-        30% { opacity: 1; }
-        100% { top: 100px; opacity: 0; transform: rotate(360deg); }
-    }
-    </style>
-    """, unsafe_allow_html=True)
+    emoji_rain_animation()
 
     contoh_kalimat = st.selectbox("📋 Pilih Contoh Kalimat", (
         "", "Aku senang banget hari ini dapet kabar baik!",
@@ -181,7 +154,7 @@ elif menu == "🧠 Deteksi Emosi":
     if contoh_kalimat:
         st.session_state["isi_otomatis"] = contoh_kalimat
 
-    user_input = st.text_area("✍️ Masukkan Teks Kamu", value=st.session_state.get("isi_otomatis"), placeholder = ("contoh : Aku senang banget"))
+    user_input = st.text_area("✍️ Masukkan Teks Kamu", value=st.session_state.get("isi_otomatis", ""))
 
     if st.button("🚀 Deteksi Sekarang"):
         if user_input.strip():
@@ -229,91 +202,75 @@ Coba juga deteksi emosi kamu di sini 👉 https://faishal26-emotion-app.streamli
 # ========== DETEKSI MASSAL ========== #
 elif menu == "📑 Deteksi Massal":
     st.title("📋 Deteksi Emosi Massal")
+    emoji_rain_animation()
     teks_massal = st.text_area("📝 Masukkan beberapa kalimat (1 baris 1 kalimat):", height=200, placeholder="Contoh:\nAku senang dapet nilai bagus!\nAku kesel banget ama dia!")
 
     if st.button("🚀 Jalankan Deteksi Massal"):
         if teks_massal.strip():
             kalimat_list = teks_massal.strip().splitlines()
             hasil_massal = []
-            for kalimat in kalimat_list:
+            
+            progress_bar = st.progress(0)
+            status_text = st.empty()
+
+            for i, kalimat in enumerate(kalimat_list):
                 emosi, _ = predict_emotion(kalimat)
                 hasil_massal.append({"Teks": kalimat, "Emosi": emosi})
+                progress = (i + 1) / len(kalimat_list)
+                progress_bar.progress(progress)
+                status_text.text(f"Mendeteksi {i+1}/{len(kalimat_list)}...")
+
+            status_text.success("Deteksi massal selesai!")
             df_massal = pd.DataFrame(hasil_massal)
             st.dataframe(df_massal)
             st.download_button("💾 Unduh Hasil", data=df_massal.to_csv(index=False), file_name="hasil_massal.csv", mime="text/csv")
         else:
             st.warning("Masukkan setidaknya satu kalimat.")
- # ========== ANIMASI EMOJI BERGERAK ========== #
+
+# ========== KONSULTASI LIVE (BARU) ========== #
+elif menu == "💬 Konsultasi Live":
+    st.title("💬 Form Konsultasi Live")
+    st.markdown("Butuh teman bicara atau saran lebih lanjut? Gunakan jendela chat di pojok kanan bawah untuk memulai percakapan langsung dengan tim kami.")
+    st.warning("⚠️ **Penting**: Widget chat hanya akan muncul jika pemilik aplikasi telah memasukkan ID Tawk.to yang valid di dalam kode.")
+
+    # --- SCRIPT TAWK.TO ---
+    # PENTING: Ganti 'YOUR_PROPERTY_ID' dan 'YOUR_WIDGET_ID' dengan ID dari akun Tawk.to Anda.
+    # Anda bisa mendapatkannya secara gratis dari dashboard tawk.to
+    property_id = "6850d8536134f7190de07c61" 
+    widget_id = "1ittsq232"
+    
+    # Jangan ubah kode di bawah ini
+    tawk_script = f"""
+    <script type="text/javascript">
+    var Tawk_API=Tawk_API||{{}}, Tawk_LoadStart=new Date();
+    (function(){{
+    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+    s1.async=true;
+    s1.src='https://tawk.to/chat/6850d8536134f7190de07c61/1ittsq232';
+    s1.charset='UTF-8';
+    s1.setAttribute('crossorigin','*');
+    s0.parentNode.insertBefore(s1,s0);
+    }})();
+    </script>
+    """
+    
+    # Hanya jalankan script jika ID sudah diisi
+    if property_id != "6850d8536134f7190de07c61" and widget_id != "1ittsq232":
+        st.markdown(tawk_script, unsafe_allow_html=True)
+    
+    st.markdown("---")
+    st.subheader("❓ Pertanyaan Umum (FAQ)")
     st.markdown("""
-    <div class="emoji-rain">
-        <span>😊</span><span>😢</span><span>😠</span><span>🥰</span><span>😎</span><span>🤯</span><span>😭</span>
-    </div>
-    <style>
-    .emoji-rain {
-        position: relative;
-        height: 50px;
-        overflow: visible;
-    }
-    .emoji-rain span {
-        position: absolute;
-        animation: fall 5s linear infinite;
-        font-size: 2rem;
-        opacity: 0.8;
-    }
-    .emoji-rain span:nth-child(1) { left: 5%; animation-delay: 0s; }
-    .emoji-rain span:nth-child(2) { left: 20%; animation-delay: 0.5s; }
-    .emoji-rain span:nth-child(3) { left: 35%; animation-delay: 1s; }
-    .emoji-rain span:nth-child(4) { left: 50%; animation-delay: 1.5s; }
-    .emoji-rain span:nth-child(5) { left: 65%; animation-delay: 2s; }
-    .emoji-rain span:nth-child(6) { left: 80%; animation-delay: 2.5s; }
-    .emoji-rain span:nth-child(7) { left: 95%; animation-delay: 3s; }
+    - **Apakah layanan ini gratis?** Ya, konsultasi dasar melalui live chat ini tidak dipungut biaya.
+    - **Apakah privasi saya terjamin?** Kami menghargai privasi Anda. Percakapan bersifat rahasia.
+    - **Kapan saja saya bisa menggunakan layanan ini?** Tim kami tersedia pada jam kerja (09:00 - 17:00 WIB). Di luar jam tersebut, Anda dapat meninggalkan pesan.
+    """)
 
-    @keyframes fall {
-        0% { top: -40px; opacity: 0; transform: rotate(0deg); }
-        30% { opacity: 1; }
-        100% { top: 100px; opacity: 0; transform: rotate(360deg); }
-    }
-    </style>
-    """, unsafe_allow_html=True)
-# ========== DETEKSI EMOSI ========== #
-elif menu == "🧠 Deteksi Emosi":
-    st.title("🔍 Deteksi Emosi dari Kalimat")
 
-    # ========== ANIMASI EMOJI BERGERAK ========== #
-    st.markdown("""
-    <div class="emoji-rain">
-        <span>😊</span><span>😢</span><span>😠</span><span>🥰</span><span>😎</span><span>🤯</span><span>😭</span>
-    </div>
-    <style>
-    .emoji-rain {
-        position: relative;
-        height: 50px;
-        overflow: visible;
-    }
-    .emoji-rain span {
-        position: absolute;
-        animation: fall 5s linear infinite;
-        font-size: 2rem;
-        opacity: 0.8;
-    }
-    .emoji-rain span:nth-child(1) { left: 5%; animation-delay: 0s; }
-    .emoji-rain span:nth-child(2) { left: 20%; animation-delay: 0.5s; }
-    .emoji-rain span:nth-child(3) { left: 35%; animation-delay: 1s; }
-    .emoji-rain span:nth-child(4) { left: 50%; animation-delay: 1.5s; }
-    .emoji-rain span:nth-child(5) { left: 65%; animation-delay: 2s; }
-    .emoji-rain span:nth-child(6) { left: 80%; animation-delay: 2.5s; }
-    .emoji-rain span:nth-child(7) { left: 95%; animation-delay: 3s; }
-
-    @keyframes fall {
-        0% { top: -40px; opacity: 0; transform: rotate(0deg); }
-        30% { opacity: 1; }
-        100% { top: 100px; opacity: 0; transform: rotate(360deg); }
-    }
-    </style>
-    """, unsafe_allow_html=True)
 # ========== TENTANG ========== #
 elif menu == "ℹ️ Tentang":
     st.title("ℹ️ Tentang Aplikasi Ini")
+    emoji_rain_animation()
     st.markdown("""
     Aplikasi deteksi emosi ini dibuat dengan:
 
@@ -327,71 +284,3 @@ elif menu == "ℹ️ Tentang":
     """)
     
     st.caption("© 2025 | Sistem Deteksi Emosi Bahasa Indonesia")
-     # ========== ANIMASI EMOJI BERGERAK ========== #
-    st.markdown("""
-    <div class="emoji-rain">
-        <span>😊</span><span>😢</span><span>😠</span><span>🥰</span><span>😎</span><span>🤯</span><span>😭</span>
-    </div>
-    <style>
-    .emoji-rain {
-        position: relative;
-        height: 50px;
-        overflow: visible;
-    }
-    .emoji-rain span {
-        position: absolute;
-        animation: fall 5s linear infinite;
-        font-size: 2rem;
-        opacity: 0.8;
-    }
-    .emoji-rain span:nth-child(1) { left: 5%; animation-delay: 0s; }
-    .emoji-rain span:nth-child(2) { left: 20%; animation-delay: 0.5s; }
-    .emoji-rain span:nth-child(3) { left: 35%; animation-delay: 1s; }
-    .emoji-rain span:nth-child(4) { left: 50%; animation-delay: 1.5s; }
-    .emoji-rain span:nth-child(5) { left: 65%; animation-delay: 2s; }
-    .emoji-rain span:nth-child(6) { left: 80%; animation-delay: 2.5s; }
-    .emoji-rain span:nth-child(7) { left: 95%; animation-delay: 3s; }
-
-    @keyframes fall {
-        0% { top: -40px; opacity: 0; transform: rotate(0deg); }
-        30% { opacity: 1; }
-        100% { top: 100px; opacity: 0; transform: rotate(360deg); }
-    }
-    </style>
-    """, unsafe_allow_html=True)
-# ========== DETEKSI EMOSI ========== #
-elif menu == "🧠 Deteksi Emosi":
-    st.title("🔍 Deteksi Emosi dari Kalimat")
-
-    # ========== ANIMASI EMOJI BERGERAK ========== #
-    st.markdown("""
-    <div class="emoji-rain">
-        <span>😊</span><span>😢</span><span>😠</span><span>🥰</span><span>😎</span><span>🤯</span><span>😭</span>
-    </div>
-    <style>
-    .emoji-rain {
-        position: relative;
-        height: 50px;
-        overflow: visible;
-    }
-    .emoji-rain span {
-        position: absolute;
-        animation: fall 5s linear infinite;
-        font-size: 2rem;
-        opacity: 0.8;
-    }
-    .emoji-rain span:nth-child(1) { left: 5%; animation-delay: 0s; }
-    .emoji-rain span:nth-child(2) { left: 20%; animation-delay: 0.5s; }
-    .emoji-rain span:nth-child(3) { left: 35%; animation-delay: 1s; }
-    .emoji-rain span:nth-child(4) { left: 50%; animation-delay: 1.5s; }
-    .emoji-rain span:nth-child(5) { left: 65%; animation-delay: 2s; }
-    .emoji-rain span:nth-child(6) { left: 80%; animation-delay: 2.5s; }
-    .emoji-rain span:nth-child(7) { left: 95%; animation-delay: 3s; }
-
-    @keyframes fall {
-        0% { top: -40px; opacity: 0; transform: rotate(0deg); }
-        30% { opacity: 1; }
-        100% { top: 100px; opacity: 0; transform: rotate(360deg); }
-    }
-    </style>
-    """, unsafe_allow_html=True)
