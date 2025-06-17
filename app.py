@@ -69,7 +69,7 @@ quotes = {
 
 # ========== CHATBOT (LIVE CURHAT) ========== #
 def chat_with_bot(user_message):
-    API_URL = "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium"
+    api_url = "https://api-inference.huggingface.co/models/microsoft/DialoGPT-small"
     headers = {
         "Authorization": "Bearer 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"  
     }
