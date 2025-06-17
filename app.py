@@ -4,7 +4,7 @@ import torch
 import numpy as np
 import pandas as pd
 import plotly.express as px
-import random 
+import random
 
 # ========== CONFIG ========== #
 st.set_page_config(page_title="Deteksi Emosi AI", page_icon="💬", layout="wide")
@@ -37,38 +37,34 @@ labels = {
     4: "Stress",
 }
 
-# ========== QUOTES PER EMOSI ========== #
-def get_emotion_message(label):
-    pesan = {
-        "Bersyukur": [
-            "“Kebahagiaan itu datang saat kamu bersyukur, bukan saat kamu punya segalanya.” 🌤️",
-            "“Syukurilah hal kecil, karena dari sanalah kebahagiaan tumbuh.” 🙏",
-            "“Bersyukur bikin hati adem, hidup pun jadi ringan.” 💚"
-        ],
-        "Marah": [
-            "“Kalau marah terus, nanti cepet tua lho 😅.”",
-            "“Tenangin diri dulu yuk, jangan sampai emosi ambil alih.” 😤",
-            "“Napas... hembuskan... jangan kasih amarah menang!” 🧘‍♂️"
-        ],
-        "Sedih": [
-            "“Air mata bukan kelemahan, tapi bukti bahwa kamu manusia.” 😢",
-            "“Kamu nggak sendiri. Semua akan baik-baik saja, percaya deh.” 🤍",
-            "“Sedih hari ini, kuat esok hari. Kamu hebat!” 💪"
-        ],
-        "Senang": [
-            "“Senangmu menular! Terus tebarkan energi positif ya!” 😄",
-            "“Nikmati setiap detik kebahagiaan ini.” ✨",
-            "“Hidup lagi cerah ya? Pertahankan mood bagus ini!” 🌈"
-        ],
-        "Stress": [
-            "“Coba rehat sejenak. Kamu bukan robot, istirahat itu perlu.” 🧠",
-            "“Jangan pikirin semua sekaligus, satu-satu ya!” 🪷",
-            "“Kerja keras bagus, tapi jangan lupa istirahat.” 😌"
-        ]
-    }
-    return random.choice(pesan.get(label, ["Tetap semangat ya!"]))
+# ========== KUTIPAN BERDASARKAN EMOSI ========== #
+quotes = {
+    "Bersyukur": [
+        "Rasa syukur mengubah apa yang kita miliki menjadi cukup. 🌼",
+        "Bahagia itu sederhana, yaitu bersyukur. 🤲"
+    ],
+    "Marah": [
+        "Marah hanya akan membakar hatimu sendiri. Tenangkan pikiranmu. 🔥🧊",
+        "Tahan amarah, karena kamu lebih kuat dari emosimu. 💪"
+    ],
+    "Sedih": [
+        "Kesedihan adalah bagian dari proses menjadi kuat. 💧",
+        "Tidak apa-apa merasa sedih, itu tanda kamu manusia. 🤍"
+    ],
+    "Senang": [
+        "Nikmati setiap momen bahagia. Kamu pantas mendapatkannya! 😄",
+        "Kebahagiaan itu menular, bagikanlah! ✨"
+    ],
+    "Stress": [
+        "Tarik napas, kamu sudah melakukan yang terbaik. 🌿",
+        "Luangkan waktu untuk dirimu sendiri. 💆‍♂️"
+    ]
+}
 
-# ========== LOAD MODEL DARI HUGGINGFACE ========== #
+def get_emotion_message(label):
+    return random.choice(quotes.get(label, ["Tetap semangat!"]))
+
+# ========== LOAD MODEL ========== #
 @st.cache_resource
 def load_model():
     repo = "faishal26/final_model"
@@ -128,12 +124,10 @@ elif menu == "🧠 Deteksi Emosi":
             with st.spinner("🔍 Mendeteksi emosi... ✨😊😢😠😄"):
                 label, probas = predict_emotion(user_input)
             prob_dict = {labels[i]: float(probas[i]) for i in range(len(labels))}
+
             st.success(f"💡 Emosi Terdeteksi: **{label}**")
 
-            # Tampilkan kutipan berdasarkan emosi
-            st.markdown(f"#### 🧾 Kutipan untukmu:")
-            st.info(get_emotion_message(label))
-
+            # Grafik Pie Chart
             fig = px.pie(
                 names=list(prob_dict.keys()),
                 values=list(prob_dict.values()),
@@ -142,6 +136,27 @@ elif menu == "🧠 Deteksi Emosi":
             )
             st.plotly_chart(fig, use_container_width=True)
 
+            # Kutipan Emosional
+            st.markdown("#### 💬 Kutipan untuk Kamu:")
+            st.info(get_emotion_message(label))
+
+            # 🔗 Ajakan Share
+            st.markdown("---")
+            st.subheader("🔗 Bagikan Hasil Deteksimu!")
+
+            st.markdown("""
+            Ingin temanmu tahu bagaimana suasana hatimu hari ini? Salin teks di bawah dan bagikan ke media sosialmu! 🎉
+            """)
+
+            share_text = f"""💬 *Saya baru saja mendeteksi emosi saya lewat AI IndoBERT!*
+Teks: "{user_input}"
+Emosi: **{label}**
+
+Coba juga deteksi emosi kamu di sini 👉 https://sistemdeteksiemosidalamteksberbahasaindonesia.streamlit.app/"""
+            st.code(share_text, language="markdown")
+            st.caption("Salin dan bagikan ke WhatsApp, Instagram Story, atau Twitter 🚀")
+
+            # Tombol Unduh
             with st.expander("📥 Simpan Hasil"):
                 hasil_df = pd.DataFrame({
                     "Teks": [user_input],
