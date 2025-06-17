@@ -169,14 +169,6 @@ elif menu == "📑 Deteksi Massal":
 # ========== FORM KONSULTASI ========== #
 elif menu == "💬 Form Konsultasi":
     st.title("💬 Konsultasi Emosi dengan Admin")
-
-    st.markdown("""
-        Jika kamu ingin berbicara atau berkonsultasi lebih lanjut mengenai perasaanmu, 
-        silakan gunakan live chat di pojok kanan bawah layar.
-
-        🧠 Jangan ragu, admin kami siap mendengarkan kamu secara privat dan hangat.
-    """)
-
     # Tawk.to Script (ganti URL sesuai akun kamu)
     st.markdown("""
         <!-- Start of Tawk.to Script -->
