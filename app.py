@@ -258,6 +258,7 @@ elif menu == "ℹ️ Tentang":
     - 🤗 Transformers (IndoBERT)
     - 🔥 PyTorch
     - 🖥️ Streamlit modern style
+    - 👨‍💻 Tawk.to
 
     Dibuat untuk tugas akhir kuliah **Kecerdasan Buatan**.
 
