@@ -4,6 +4,7 @@ import torch
 import numpy as np
 import pandas as pd
 import plotly.express as px
+import random 
 
 # ========== CONFIG ========== #
 st.set_page_config(page_title="Deteksi Emosi AI", page_icon="💬", layout="wide")
@@ -36,10 +37,41 @@ labels = {
     4: "Stress",
 }
 
+# ========== QUOTES PER EMOSI ========== #
+def get_emotion_message(label):
+    pesan = {
+        "Bersyukur": [
+            "“Kebahagiaan itu datang saat kamu bersyukur, bukan saat kamu punya segalanya.” 🌤️",
+            "“Syukurilah hal kecil, karena dari sanalah kebahagiaan tumbuh.” 🙏",
+            "“Bersyukur bikin hati adem, hidup pun jadi ringan.” 💚"
+        ],
+        "Marah": [
+            "“Kalau marah terus, nanti cepet tua lho 😅.”",
+            "“Tenangin diri dulu yuk, jangan sampai emosi ambil alih.” 😤",
+            "“Napas... hembuskan... jangan kasih amarah menang!” 🧘‍♂️"
+        ],
+        "Sedih": [
+            "“Air mata bukan kelemahan, tapi bukti bahwa kamu manusia.” 😢",
+            "“Kamu nggak sendiri. Semua akan baik-baik saja, percaya deh.” 🤍",
+            "“Sedih hari ini, kuat esok hari. Kamu hebat!” 💪"
+        ],
+        "Senang": [
+            "“Senangmu menular! Terus tebarkan energi positif ya!” 😄",
+            "“Nikmati setiap detik kebahagiaan ini.” ✨",
+            "“Hidup lagi cerah ya? Pertahankan mood bagus ini!” 🌈"
+        ],
+        "Stress": [
+            "“Coba rehat sejenak. Kamu bukan robot, istirahat itu perlu.” 🧠",
+            "“Jangan pikirin semua sekaligus, satu-satu ya!” 🪷",
+            "“Kerja keras bagus, tapi jangan lupa istirahat.” 😌"
+        ]
+    }
+    return random.choice(pesan.get(label, ["Tetap semangat ya!"]))
+
 # ========== LOAD MODEL DARI HUGGINGFACE ========== #
 @st.cache_resource
 def load_model():
-    repo = "faishal26/final_model"  # ganti dengan nama repositori modelmu di Hugging Face
+    repo = "faishal26/final_model"
     model = BertForSequenceClassification.from_pretrained(repo)
     tokenizer = BertTokenizer.from_pretrained(repo)
     return model, tokenizer
@@ -97,6 +129,10 @@ elif menu == "🧠 Deteksi Emosi":
                 label, probas = predict_emotion(user_input)
             prob_dict = {labels[i]: float(probas[i]) for i in range(len(labels))}
             st.success(f"💡 Emosi Terdeteksi: **{label}**")
+
+            # Tampilkan kutipan berdasarkan emosi
+            st.markdown(f"#### 🧾 Kutipan untukmu:")
+            st.info(get_emotion_message(label))
 
             fig = px.pie(
                 names=list(prob_dict.keys()),
