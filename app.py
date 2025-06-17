@@ -4,8 +4,7 @@ import torch
 import numpy as np
 import pandas as pd
 import plotly.express as px
-import requests
-import random 
+import random
 
 # ========== CONFIG ========== #
 st.set_page_config(page_title="Deteksi Emosi AI", page_icon="💬", layout="wide")
@@ -38,10 +37,34 @@ labels = {
     4: "Stress",
 }
 
+# ========== QUOTES PER EMOSI ========== #
+quotes = {
+    "Bersyukur": [
+        "Rasa syukur membuat hari-hari kita lebih bermakna.",
+        "Dengan bersyukur, hidup menjadi lebih indah."
+    ],
+    "Marah": [
+        "Tenang... menarik napas dalam bisa bantu meredakan amarah.",
+        "Marah itu manusiawi, tapi jangan biarkan ia menguasai kamu."
+    ],
+    "Sedih": [
+        "Tidak apa-apa merasa sedih, kamu manusia yang punya hati.",
+        "Kadang menangis justru tanda kamu kuat bertahan."
+    ],
+    "Senang": [
+        "Senang itu menular, sebarkan kebahagiaanmu!",
+        "Nikmati setiap momen bahagia, karena kamu layak mendapatkannya."
+    ],
+    "Stress": [
+        "Luangkan waktu sejenak untuk dirimu sendiri, kamu butuh istirahat.",
+        "Jangan terlalu keras pada dirimu. Pelan-pelan, semua bisa diatasi."
+    ],
+}
+
 # ========== LOAD MODEL ========== #
 @st.cache_resource
 def load_model():
-    repo = "faishal26/final_model"
+    repo = "faishal26/final_model"  # Ganti sesuai model di Hugging Face
     model = BertForSequenceClassification.from_pretrained(repo)
     tokenizer = BertTokenizer.from_pretrained(repo)
     return model, tokenizer
@@ -58,31 +81,12 @@ def predict_emotion(text):
     predicted_label = labels[np.argmax(probs)]
     return predicted_label, probs
 
-# ========== QUOTES ========== #
-quotes = {
-    "Bersyukur": "Selalu bersyukur adalah kunci kebahagiaan yang sesungguhnya 🌟",
-    "Marah": "Tarik napas dalam, dan coba lihat sisi baik dari situasi ini 🌬️",
-    "Sedih": "Tidak apa-apa untuk merasa sedih. Kamu tidak sendiri 🤗",
-    "Senang": "Nikmati setiap momen bahagia ini, kamu pantas mendapatkannya 😄",
-    "Stress": "Ambil jeda, istirahatkan pikiranmu sejenak. Kamu akan baik-baik saja ☕"
-}
-
-# ========== CHATBOT (LIVE CURHAT) ========== #
-def chat_with_bot(user_message):
-    API_URL = "https://api-inference.huggingface.co/models/microsoft/DialoGPT-small"
-    headers = {
-        "Authorization": "Bearer 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"  
-    }
-    payload = {"inputs": {"text": user_message}}
-    response = requests.post(API_URL, headers=headers, json=payload)
-    if response.status_code == 200:
-        return response.json()[0]["generated_text"]
-    else:
-        return "Maaf, chatbot sedang tidak tersedia. Coba lagi nanti ya."
-
 # ========== SIDEBAR ========== #
 st.sidebar.title("🧭 Navigasi")
-menu = st.sidebar.radio("Pilih Halaman", ["🏠 Beranda", "🧠 Deteksi Emosi", "📑 Deteksi Massal", "💬 Konsultasi Virtual", "ℹ️ Tentang"])
+menu = st.sidebar.radio("Pilih Halaman", [
+    "🏠 Beranda", "🧠 Deteksi Emosi", "📑 Deteksi Massal", 
+    "💬 Form Konsultasi", "ℹ️ Tentang"
+])
 st.sidebar.markdown("---")
 st.sidebar.info("✨ Powered by IndoBERT\n👨‍💻 Kelompok 1")
 
@@ -95,8 +99,8 @@ if menu == "🏠 Beranda":
         ### 🎯 Fitur:
         - Deteksi emosi satu kalimat atau banyak
         - Visualisasi grafik pie chart
-        - Konsultasi virtual dengan chatbot
         - Ekspor hasil ke CSV
+        - Live chat konsultasi
     """)
 
 # ========== DETEKSI EMOSI ========== #
@@ -120,11 +124,12 @@ elif menu == "🧠 Deteksi Emosi":
         if user_input.strip():
             with st.spinner("🔍 Mendeteksi emosi... ✨😊😢😠😄"):
                 label, probas = predict_emotion(user_input)
-
             prob_dict = {labels[i]: float(probas[i]) for i in range(len(labels))}
             st.success(f"💡 Emosi Terdeteksi: **{label}**")
 
-            # Pie chart
+            # Kutipan berdasarkan emosi
+            st.info(f"💬 *{random.choice(quotes[label])}*")
+
             fig = px.pie(
                 names=list(prob_dict.keys()),
                 values=list(prob_dict.values()),
@@ -133,10 +138,6 @@ elif menu == "🧠 Deteksi Emosi":
             )
             st.plotly_chart(fig, use_container_width=True)
 
-            # Quotes berdasarkan emosi
-            st.info(f"📌 **Kutipan:** _{quotes[label]}_")
-
-            # Ekspor hasil
             with st.expander("📥 Simpan Hasil"):
                 hasil_df = pd.DataFrame({
                     "Teks": [user_input],
@@ -165,21 +166,33 @@ elif menu == "📑 Deteksi Massal":
         else:
             st.warning("Masukkan setidaknya satu kalimat.")
 
-# ========== KONSULTASI VIRTUAL ========== #
-elif menu == "💬 Konsultasi Virtual":
-    st.title("💬 Konsultasi Virtual dengan Bot Emosi")
-    st.markdown("Tulis apapun yang kamu rasakan, biarkan AI menjadi teman curhatmu 🤗")
+# ========== FORM KONSULTASI ========== #
+elif menu == "💬 Form Konsultasi":
+    st.title("💬 Konsultasi Emosi dengan Admin")
 
-    user_message = st.text_input("🗣️ Ceritakan Sesuatu", placeholder="Aku lagi sedih karena...")
+    st.markdown("""
+        Jika kamu ingin berbicara atau berkonsultasi lebih lanjut mengenai perasaanmu, 
+        silakan gunakan live chat di pojok kanan bawah layar.
 
-    if st.button("💬 Kirim"):
-        if user_message.strip():
-            with st.spinner("Bot sedang menanggapi..."):
-                response = chat_with_bot(user_message)
-            st.success("🧠 Balasan dari Bot:")
-            st.write(f"> {response}")
-        else:
-            st.warning("Tulis sesuatu dulu ya.")
+        🧠 Jangan ragu, admin kami siap mendengarkan kamu secara privat dan hangat.
+    """)
+
+    # Tawk.to Script (ganti URL sesuai akun kamu)
+    st.markdown("""
+        <!-- Start of Tawk.to Script -->
+        <script type="text/javascript">
+        var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+        (function(){
+        var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+        s1.async=true;
+        s1.src='https://embed.tawk.to/6850d8536134f7190de07c61/1ittsq232';
+        s1.charset='UTF-8';
+        s1.setAttribute('crossorigin','*');
+        s0.parentNode.insertBefore(s1,s0);
+        })();
+        </script>
+        <!-- End of Tawk.to Script -->
+    """, unsafe_allow_html=True)
 
 # ========== TENTANG ========== #
 elif menu == "ℹ️ Tentang":
