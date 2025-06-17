@@ -8,6 +8,34 @@ import plotly.express as px
 # ========== CONFIG ========== #
 st.set_page_config(page_title="Deteksi Emosi AI", page_icon="💬", layout="wide")
 
+# ========== ANIMASI EMOJI BERGERAK ========== #
+st.markdown("""
+    <style>
+    .emoji-float {
+        position: fixed;
+        top: -50px;
+        animation: emoji-fall 10s linear infinite;
+        font-size: 30px;
+        z-index: 9999;
+    }
+    @keyframes emoji-fall {
+        0% {top: -50px;}
+        100% {top: 110%;}
+    }
+    </style>
+    <script>
+    const emojis = ["😊", "😢", "😠", "🥳", "😮"];
+    for (let i = 0; i < 30; i++) {
+        let emoji = document.createElement("div");
+        emoji.className = "emoji-float";
+        emoji.style.left = Math.random() * 100 + "vw";
+        emoji.style.animationDelay = Math.random() * 10 + "s";
+        emoji.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+        document.body.appendChild(emoji);
+    }
+    </script>
+""", unsafe_allow_html=True)
+
 # ========== CUSTOM CSS ========== #
 st.markdown("""
     <style>
@@ -39,7 +67,7 @@ labels = {
 # ========== LOAD MODEL DARI HUGGINGFACE ========== #
 @st.cache_resource
 def load_model():
-    repo = "faishal26/final_model"  # ganti dengan nama repositori modelmu di Hugging Face
+    repo = "faishal26/final_model"  # ganti dengan repositori Hugging Face milikmu
     model = BertForSequenceClassification.from_pretrained(repo)
     tokenizer = BertTokenizer.from_pretrained(repo)
     return model, tokenizer
