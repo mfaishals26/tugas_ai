@@ -61,7 +61,7 @@ def load_model():
     model_dir = "final_model"
     zip_file = "final_model.zip"
     file_id = "final_model.zip"  # GANTI dengan ID ZIP kamu
-    url = f"https://drive.google.com/file/d/1htLjHXU3kQchKbvqMumQ9iW95EjDY2M0/view?usp=sharing{file_id}"
+    url = f"https://drive.google.com/file/d/1htLjHXU3kQchKbvqMumQ9iW95EjDY2M0/view?usp=drive_link{file_id}"
 
     if not os.path.exists(model_dir):
         with st.spinner("📦 Mengunduh dan mengekstrak model..."):
