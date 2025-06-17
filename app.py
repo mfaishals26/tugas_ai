@@ -234,28 +234,25 @@ elif menu == "💬 Konsultasi Live":
     st.warning("⚠️ **Penting**: Widget chat hanya akan muncul jika pemilik aplikasi telah memasukkan ID Tawk.to yang valid di dalam kode.")
 
     # --- SCRIPT TAWK.TO ---
-    # PENTING: Ganti 'YOUR_PROPERTY_ID' dan 'YOUR_WIDGET_ID' dengan ID dari akun Tawk.to Anda.
-    # Anda bisa mendapatkannya secara gratis dari dashboard tawk.to
+    # Ganti 'YOUR_PROPERTY_ID' dan 'YOUR_WIDGET_ID' dengan ID dari akun Tawk.to Anda.
     property_id = "6850d8536134f7190de07c61" 
     widget_id = "1ittsq232"
     
-    # Jangan ubah kode di bawah ini
-    tawk_script = f"""
-    <script type="text/javascript">
-    var Tawk_API=Tawk_API||{{}}, Tawk_LoadStart=new Date();
-    (function(){{
-    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-    s1.async=true;
-    s1.src='https://embed.tawk.to/6850d8536134f7190de07c61/1ittsq232';
-    s1.charset='UTF-8';
-    s1.setAttribute('crossorigin','*');
-    s0.parentNode.insertBefore(s1,s0);
-    }})();
-    </script>
-    """
-    
     # Hanya jalankan script jika ID sudah diisi
     if property_id != "6850d8536134f7190de07c61" and widget_id != "1ittsq232":
+        tawk_script = f"""
+        <script type="text/javascript">
+        var Tawk_API=Tawk_API||{{}}, Tawk_LoadStart=new Date();
+        (function(){{
+        var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+        s1.async=true;
+        s1.src='https://embed.tawk.to/6850d8536134f7190de07c61/1ittsq232';
+        s1.charset='UTF-8';
+        s1.setAttribute('crossorigin','*');
+        s0.parentNode.insertBefore(s1,s0);
+        }})();
+        </script>
+        """
         st.markdown(tawk_script, unsafe_allow_html=True)
     
     st.markdown("---")
@@ -265,7 +262,6 @@ elif menu == "💬 Konsultasi Live":
     - **Apakah privasi saya terjamin?** Kami menghargai privasi Anda. Percakapan bersifat rahasia.
     - **Kapan saja saya bisa menggunakan layanan ini?** Tim kami tersedia pada jam kerja (09:00 - 17:00 WIB). Di luar jam tersebut, Anda dapat meninggalkan pesan.
     """)
-
 
 # ========== TENTANG ========== #
 elif menu == "ℹ️ Tentang":
