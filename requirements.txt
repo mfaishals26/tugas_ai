@@ -1,6 +1,5 @@
 streamlit
+torch==2.1.0
 transformers
-torch==2.5.1
 pandas
 plotly
-gdown
