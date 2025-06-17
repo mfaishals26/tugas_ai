@@ -167,25 +167,19 @@ elif menu == "📑 Deteksi Massal":
             st.warning("Masukkan setidaknya satu kalimat.")
 
 # ========== FORM KONSULTASI ========== #
-elif menu == "💬 Form Konsultasi":
-    st.title("💬 Konsultasi Emosi dengan Admin")
-    # Tawk.to Script (ganti URL sesuai akun kamu)
-    st.markdown("""
-        <!-- Start of Tawk.to Script -->
-        <script type="text/javascript">
-        var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-        (function(){
-        var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-        s1.async=true;
-        s1.src='https://embed.tawk.to/6850d8536134f7190de07c61/1ittsq232';
-        s1.charset='UTF-8';
-        s1.setAttribute('crossorigin','*');
-        s0.parentNode.insertBefore(s1,s0);
-        })();
-        </script>
-        <!-- End of Tawk.to Script -->
-    """, unsafe_allow_html=True)
-
+<!--Start of Tawk.to Script-->
+<script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/6850d8536134f7190de07c61/1ittsq232';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
+<!--End of Tawk.to Script-->
 # ========== TENTANG ========== #
 elif menu == "ℹ️ Tentang":
     st.title("ℹ️ Tentang Aplikasi Ini")
